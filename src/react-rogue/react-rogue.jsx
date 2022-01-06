@@ -4,7 +4,7 @@ import InputManger from "./input-manager";
 import World from "./world";
 import Spawner from "./spawner";
 
-const ReactRogue = ({ width, height, tilesize }) => {
+const ReactRogue = ({ width, height, tilesize, lootCount, enemiesCount }) => {
   const canvasRef = useRef();
   const [world, setWorld] = useState(new World(width, height, tilesize));
   let inputManger = new InputManger();
@@ -30,8 +30,8 @@ const ReactRogue = ({ width, height, tilesize }) => {
     newWorld.createCellularMap();
     newWorld.moveToSpace(world.entities[0]);
     let spawner = new Spawner(newWorld);
-    spawner.spawnLoot(10);
-    spawner.spawnEnemies(5);
+    spawner.spawnLoot(lootCount || 10);
+    spawner.spawnEnemies(enemiesCount || 5);
     spawner.spawnStairs();
     setWorld(newWorld);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -44,20 +44,9 @@ const ReactRogue = ({ width, height, tilesize }) => {
   });
 
   return (
-    // <>
-    // <canvas ref={canvasRef} width={width * tilesize} height={height * tilesize} style={{ border: '1px solid black', background: '#778899' }} />
-    // <h3>Player Inventory</h3>
-    // <ul>
-    //   {world.entities[0].inventory.map((item, index) => (<li key={index}>{item.attributes.name}</li>))}
-    // </ul>
-    // <h3>World History</h3>
-    // <ul>
-    //   {world.history.map((item, index) => (<li key={index}>{item}</li>))}
-    // </ul>
-    // </>
     <div className="container">
       <div className="item left-menu">
-        <h3>Player Inventory</h3>
+        <strong>Player Inventory</strong>
         <ul>
           {world.entities[0].inventory.map((item, index) => (<li key={index}>{item.attributes.name}</li>))}
         </ul>
@@ -66,7 +55,7 @@ const ReactRogue = ({ width, height, tilesize }) => {
         <canvas ref={canvasRef} width={width * tilesize} height={height * tilesize} style={{ border: '1px solid black', background: '#778899' }} />
       </div>
       <div className="item right-menu">
-        <h3>World History</h3>
+        <strong>World History</strong>
         <ul>
           {world.history.map((item, index) => (<li key={index}>{item}</li>))}
         </ul>

@@ -3,7 +3,13 @@ import ReactRogue from './react-rogue/react-rogue';
 
 function App() {
   return (
-    <ReactRogue width={40} height={40} tilesize={16}/>
+    <ReactRogue
+      width={10}
+      height={10}
+      tilesize={16}
+      lootCount={1}
+      enemiesCount={1}
+    />
   );
 }
 

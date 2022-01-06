@@ -6,8 +6,11 @@ class World {
     this.width = width;
     this.height = height;
     this.tilesize = tilesize;
-    this.entities = [new Player(0, 0, 16)];
+    this.player = new Player(0, 0, 16);
+    this.playerMoveCount = 0;
+    this.entities = [this.player];
     this.history = ['You enter the dungeon!', '---'];
+    this.maxHistoryLength = 10;
 
     this.worldmap = new Array(this.width);
     for (let x = 0; x < this.width; x++) {
@@ -44,9 +47,13 @@ class World {
   }
 
   movePlayer(dx, dy) {
+    this.playerMoveCount += 1;
+    this.addToHistory(`[${this.playerMoveCount}] You are at X: ${this.player.x} and Y: ${this.player.y}`)
     let tempPlayer = this.entities[0].copyPlayer();
     tempPlayer.move(dx, dy);
+    // this.addToHistory(`You try to move to X: ${tempPlayer.x} and Y: ${tempPlayer.y}`)
     let entity = this.getEntityAtLocation(tempPlayer.x, tempPlayer.y);
+
     if (entity) {
       entity.action('take',this);
       entity.action('attack',this);
@@ -58,6 +65,7 @@ class World {
       this.addToHistory('You bump into a wall.');
     } else {
       this.entities[0].move(dx, dy);
+      this.addToHistory(`[${this.playerMoveCount}] You moved to X: ${tempPlayer.x} and Y: ${tempPlayer.y}`, true)
     }
   }
 
@@ -88,10 +96,16 @@ class World {
     ctx.fillRect(x * this.tilesize, y * this.tilesize, this.tilesize, this.tilesize);
   }
 
-  addToHistory(history) {
+  addToHistory(history, separator = false) {
     this.history.push(history);
-    if (this.history.length > 6) {
+    if (separator) {
+      this.history.push('---');
+    }
+    if (this.history.length > this.maxHistoryLength) {
       this.history.shift();
+      if (separator) {
+        this.history.shift();
+      }
     }
   }
 }
